@@ -3,17 +3,17 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  //Serial.println(".....");
+  
 }
 
 void loop() 
 {
   // put your main code here, to run repeatedly:
-    //Serial.println("-------");
     IC7400();
     IC4072();
     IC7404();
     IC7420();
+    IC7473();
     while(true){
       ;
     }
@@ -101,6 +101,24 @@ void IC7420()
   b=fournand(pin(13),pin(12),pin(10),pin(9),pin(8));
   if(a==true && b==true){
     show("IC7420");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC7473()
+{
+  pinMode(pin(4),OUTPUT);
+  pinMode(pin(11),OUTPUT);
+  digitalWrite(pin(4),HIGH);
+  digitalWrite(pin(11),LOW);
+  bool a,b;
+  a=jk_ff_with_clear(pin(14),pin(3),pin(1),pin(2),pin(12),pin(13));
+  b=jk_ff_with_clear(pin(7),pin(10),pin(5),pin(6),pin(9),pin(8));
+  if (a==true && b==true)
+  {
+    show("IC7473");
     while(true)
     {
       ;
@@ -301,11 +319,6 @@ boolean fouror(int inp1,int inp2,int inp3,int inp4,int outp)
           digitalWrite(inp2,(bool) j);
           digitalWrite(inp3,(bool) k);
           digitalWrite(inp4,(bool) l);
-          Serial.println("---------");
-          Serial.print(i);Serial.print(" ");Serial.print(j);Serial.print(" ");Serial.print(k);Serial.print(" ");Serial.print(l);
-          Serial.println(v);
-          Serial.println(digitalRead(outp));
-          Serial.println("---------");
           delay(delayms);
           if (digitalRead(outp)==v)
           {
@@ -316,7 +329,7 @@ boolean fouror(int inp1,int inp2,int inp3,int inp4,int outp)
       }
     }
   }
-  Serial.println(flag);
+  
 
   if (flag==16)
   {
@@ -461,4 +474,97 @@ boolean fourand(int inp1,int inp2,int inp3,int inp4,int outp)
     return false;
   }
   
+}
+void clock(int n)
+{
+  pinMode(n,OUTPUT);
+  digitalWrite(n,LOW);
+  delay(1);
+  digitalWrite(n,HIGH);
+  delay(1);
+  digitalWrite(n,LOW);
+  delay(1);
+  return;
+
+}
+boolean jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
+{
+  pinMode(j,OUTPUT);
+  pinMode(k,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(clr,OUTPUT);
+  pinMode(q,INPUT);
+  pinMode(q_,INPUT);
+  int flag=0;
+  int y,u;
+  digitalWrite(clr,HIGH);
+  digitalWrite(j,LOW);
+  digitalWrite(k,HIGH);
+  clock(clk);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(j,HIGH);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(j,HIGH);
+  digitalWrite(k,HIGH);
+  clock(clk);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clr,LOW);
+  for (y=0;y<=1;y++)
+  {
+    for(u=0;u<=1;u++)
+    {
+      digitalWrite(j,(bool) y);
+      digitalWrite(k,(bool) u);
+      clock(clk);
+      if(digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+      {
+        flag=flag+1;
+      }
+    }
+  }
+  digitalWrite(clr,HIGH);
+  digitalWrite(j,LOW);
+  digitalWrite(k,HIGH);
+  clock(clk);
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(j,HIGH);
+  digitalWrite(k,HIGH);
+  clock(clk);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  if (flag==10)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+
 }

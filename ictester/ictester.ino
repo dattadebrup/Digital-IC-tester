@@ -1,4 +1,3 @@
-//test
 int delayms=0;
 void setup() 
 {

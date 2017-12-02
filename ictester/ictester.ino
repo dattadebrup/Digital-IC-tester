@@ -14,6 +14,7 @@ void loop()
     IC7404();
     IC7420();
     IC7473();
+    IC7474();
     while(true){
       ;
     }
@@ -119,6 +120,24 @@ void IC7473()
   if (a==true && b==true)
   {
     show("IC7473");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC7474()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b;
+  a=d_pos_trig_ff_with_pre_clr(pin(2),pin(3),pin(1),pin(4),pin(5),pin(6));
+  b=d_pos_trig_ff_with_pre_clr(pin(12),pin(11),pin(13),pin(10),pin(9),pin(8));
+  if (a==true && b==true)
+  {
+    show("IC7474");
     while(true)
     {
       ;
@@ -559,6 +578,70 @@ boolean jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
     flag=flag+1;
   }
   if (flag==10)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+
+}
+boolean d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
+{
+  pinMode(d,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(clr,OUTPUT);
+  pinMode(pre,OUTPUT);
+  int flag=0;
+  int i;
+  pinMode(q,INPUT);
+  pinMode(q_,INPUT);
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,HIGH);
+  digitalWrite(d,HIGH);
+  clock(clk);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(d,LOW);
+  clock(clk);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,HIGH);
+  for(i=0;i<=1;i++)
+  {
+    digitalWrite(d,(bool) i);
+    if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+    {
+      flag=flag+1;
+    }
+  }
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,LOW);
+  for(i=0;i<=1;i++)
+  {
+    digitalWrite(d,(bool) i);
+    if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+    {
+      flag=flag+1;
+    }
+  }
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,LOW);
+  for(i=0;i<=1;i++)
+  {
+    digitalWrite(d,(bool) i);
+    if (digitalRead(q)==HIGH && digitalRead(q_)==HIGH)
+    {
+      flag=flag+1;
+    }
+  }
+  if (flag==8)
   {
     return true;
   }

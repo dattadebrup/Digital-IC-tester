@@ -9,14 +9,19 @@ void setup()
 void loop() 
 {
   // put your main code here, to run repeatedly:
-    IC7400();
-    IC7401();
-    IC7402();
-    IC7404();
-    IC7408();
-    IC7410();
-    IC7411();
-    IC7420();
+    IC7400();//**7403**quad two input nand gate
+    IC7401();//quad two input nand gate but different pins
+    IC7402();//quad two input nor gate
+    IC7404();//**7405**hex inverter
+    IC7408();//**7409**quad two input and gate
+    IC7410();//**7412**tri three input nand gate
+    IC7411();//**7415**tri three input and gate
+    IC7420();//**7422**twice four input nand gate
+    IC7421();//twice four input and gate
+    IC7427();//tri three input nor gate
+    IC7430();//eight input nandgate
+    IC7432();//quad two input or gate
+    IC7436();//quad two input nor gate
     IC7473();
     IC7474();
     IC4072();
@@ -31,7 +36,9 @@ void loop()
 //nandgate(i/p,i/p,o/p)
 //threeNand()
 //fournand(i/p,i/p,i/p,i/p,o/p)
+//eightNand()
 //fouror()
+//threeNor()
 //orgate()
 //norgate()
 //fourand()
@@ -45,7 +52,11 @@ void show(char x[ ])
   Serial.println(x);
 }
 void IC7401()
-{
+{ 
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool a,b,c,d;
   a=nandgate(pin(2),pin(3),pin(1));
   b=nandgate(pin(5),pin(6),pin(4));
@@ -59,6 +70,10 @@ void IC7401()
   }
 }
 void IC7402(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool a,b,c,d;
   a=norgate(pin(2),pin(3),pin(1));
   b=norgate(pin(5),pin(6),pin(4));
@@ -72,6 +87,10 @@ void IC7402(){
   }
 }
 void IC7408(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool a,b,c,d;
   a=andgate(pin(2),pin(1),pin(3));
   b=andgate(pin(5),pin(4),pin(6));
@@ -85,24 +104,32 @@ void IC7408(){
   }
 }
 void IC7410(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
  bool a,b,c;
  a=threeNand(pin(1),pin(2),pin(13),pin(12));
  b=threeNand(pin(3),pin(4),pin(5),pin(6));
  c=threeNand(pin(9),pin(10),pin(11),pin(8));
  if(a==true && b==true && c==true){
-  show("IC7410");
+  show("IC7410 or IC7412");
   while(true){
     ;
   }
  }
 }
 void IC7411(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
  bool a,b,c;
  a=threeAnd(pin(1),pin(2),pin(13),pin(12));
  b=threeAnd(pin(3),pin(4),pin(5),pin(6));
  c=threeAnd(pin(9),pin(10),pin(11),pin(8));
  if(a==true && b==true && c==true){
-  show("IC7411");
+  show("IC7411 or IC7415");
   while(true){
     ;
   }
@@ -110,6 +137,10 @@ void IC7411(){
 }
 void IC4072()
 {
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool x,y;
   x=fouror(pin(2),pin(3),pin(4),pin(5),pin(1));
   y=fouror(pin(9),pin(10),pin(11),pin(12),pin(13));
@@ -124,7 +155,11 @@ void IC4072()
   }
 }
 void IC7400()
-{
+{ 
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool a,b,c,d;
   a=nandgate(pin(1),pin(2),pin(3));
   b=nandgate(pin(4),pin(5),pin(6));
@@ -141,6 +176,10 @@ void IC7400()
 }
 void IC7404()
 {
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool a,b,c,d,e,f;
   a=notgate(pin(1),pin(2));
   b=notgate(pin(3),pin(4));
@@ -156,14 +195,99 @@ void IC7404()
   }
 }
 void IC7420()
-{
+{ 
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
   bool a,b;
   a=fournand(pin(1),pin(2),pin(4),pin(5),pin(6));
   b=fournand(pin(13),pin(12),pin(10),pin(9),pin(8));
   if(a==true && b==true){
-    show("IC7420");
+    show("IC7420 or IC7422");
     while(true)
     {
+      ;
+    }
+  }
+}
+void IC7421()
+{ 
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
+  bool a,b;
+  a=fourand(pin(1),pin(2),pin(4),pin(5),pin(6));
+  b=fourand(pin(13),pin(12),pin(10),pin(9),pin(8));
+  if(a==true && b==true){
+    show("IC7421");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC7427(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
+ bool a,b,c;
+ a=threeNor(pin(1),pin(2),pin(13),pin(12));
+ b=threeNor(pin(3),pin(4),pin(5),pin(6));
+ c=threeNor(pin(9),pin(10),pin(11),pin(8));
+ if(a==true && b==true && c==true){
+  show("IC7427");
+  while(true){
+    ;
+  }
+ }
+}
+void IC7430(){
+   pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
+  bool a;
+  a=eightNand(pin(1),pin(2),pin(3),pin(4),pin(5),pin(6),pin(11),pin(12),pin(8));
+  if (a==true){
+    show("IC7430");
+    while(true){
+    ;
+    }
+  }
+}
+void IC7432(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
+  bool a,b,c,d;
+  a=orgate(pin(1),pin(2),pin(3));
+  b=orgate(pin(4),pin(5),pin(6));
+  c=orgate(pin(10),pin(9),pin(8));
+  d=orgate(pin(13),pin(12),pin(11));
+  if(a==true && b==true && c==true && d==true){
+    show("IC7432");
+    while(true){
+      ;
+    }
+  }
+}
+void IC7436(){
+  pinMode(7,OUTPUT);
+  pinMode(14,OUTPUT);
+  digitalWrite(7,LOW);
+  digitalWrite(14,HIGH);
+  bool a,b,c,d;
+  a=norgate(pin(1),pin(2),pin(3));
+  b=norgate(pin(4),pin(5),pin(6));
+  c=norgate(pin(10),pin(9),pin(8));
+  d=norgate(pin(13),pin(12),pin(11));
+  if(a==true && b==true && c==true && d==true){
+    show("IC7436");
+    while(true){
       ;
     }
   }
@@ -382,6 +506,32 @@ boolean threeNand(int inp1,int inp2,int inp3,int otp){
     return false;
   }
 }
+boolean threeNor(int inp1,int inp2,int inp3,int otp){
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(otp,INPUT);
+  int i,j,k,count=0;
+  for(i=0;i<2;i++){
+    digitalWrite(inp1,(bool)i);
+    for(j=0;j<2;j++){
+      digitalWrite(inp2,(bool)j);
+      for(k=0;k<2;k++){
+         digitalWrite(inp3,(bool)k);
+         delayMicroseconds(1);
+         if(digitalRead(otp)!=((bool)i || (bool)j || (bool)k)){
+            count++;
+         }
+         else{
+          return false;
+         }
+      }
+    }
+  }
+  if(count==8){
+    return true;
+  }
+}
 boolean fournand(int inp1,int inp2,int inp3,int inp4,int outp)
 {
   pinMode(inp1,OUTPUT);
@@ -427,6 +577,55 @@ boolean fournand(int inp1,int inp2,int inp3,int inp4,int outp)
     return false;
   }
   
+}
+boolean eightNand(int inp1,int inp2,int inp3,int inp4,int inp5,int inp6,int inp7,int inp8,int otp){
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(inp4,OUTPUT);
+  pinMode(inp5,OUTPUT);
+  pinMode(inp6,OUTPUT);
+  pinMode(inp7,OUTPUT);
+  pinMode(inp8,OUTPUT);
+  pinMode(otp,INPUT);
+  int a,b,c,d,e,f,g,h,count=0;
+  for(a=0;a<2;a++){
+    digitalWrite(inp1,(bool)a);
+    for (b=0;b<2;b++){
+      digitalWrite(inp2,(bool)b);
+      for (c=0;c<2;c++){
+        digitalWrite(inp3,(bool)c);
+        for(d=0;d<2;d++){
+          digitalWrite(inp4,(bool)d);
+          for(e=0;e<2;e++){
+            digitalWrite(inp5,(bool)e);
+            for(f=0;f<2;f++){
+              digitalWrite(inp6,(bool)f);
+              for(g=0;g<2;g++){
+                digitalWrite(inp7,(bool)g);
+                for(h=0;h<2;h++){
+                  digitalWrite(inp8,(bool)h);
+                  delayMicroseconds(1);
+                  if(digitalRead(otp)!=((bool)a && (bool)b && (bool)c && (bool)d && (bool)e && (bool)f && (bool)g && (bool)h)){
+                    count++;
+                  }
+                  else {
+                    return false;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if(count==256){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 boolean fouror(int inp1,int inp2,int inp3,int inp4,int outp)
 {
@@ -764,3 +963,4 @@ boolean d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
     return false;
   }
 }
+

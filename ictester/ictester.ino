@@ -25,6 +25,10 @@ void loop()
     IC7473();
     IC7474();
     IC4072();
+    IC4000();
+    IC4002();
+    IC4001();
+    IC4012();
     while(true){
       ;
     }
@@ -42,6 +46,7 @@ void loop()
 //orgate()
 //norgate()
 //fourand()
+//fournor()
 //clock(int n)
 //jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
 //d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
@@ -322,6 +327,81 @@ void IC7474()
   if (a==true && b==true)
   {
     show("IC7474");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4000()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b,c;
+  a=threeNand(pin(3),pin(4),pin(5),pin(6));
+  b=threeNand(pin(11),pin(12),pin(13),pin(10));
+  c=notgate(pin(8),pin(9));
+  if(a==true && b==true && c==true)
+  {
+    show("IC4000");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4001()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b,c,d;
+  a=norgate(pin(1),pin(2),pin(3));
+  b=norgate(pin(5),pin(6),pin(4));
+  c=norgate(pin(8),pin(9),pin(10));
+  d=norgate(pin(12),pin(13),pin(11));
+  if (a==true && b==true && c==true && d==true)
+  {
+    show('IC4001');
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4002()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b;
+  a=fournor(pin(2),pin(3),pin(4),pin(5),pin(1));
+  b=fournor(pin(9),pin(10),pin(11),pin(12),pin(13));
+  if (a==true && b==true)
+  {
+    show("IC4002");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4012()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b;
+  a=fournand(pin(2),pin(3),pin(4),pin(5),pin(1));
+  b=fournand(pin(9),pin(10),pin(11),pin(12),pin(13));
+  if (a==true && b==true)
+  {
+    show("IC4012");
     while(true)
     {
       ;
@@ -806,6 +886,51 @@ boolean fourand(int inp1,int inp2,int inp3,int inp4,int outp)
     return false;
   }
   
+}
+boolean fournor(int inp1,int inp2,int inp3,int inp4,int outp)
+{
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(inp4,OUTPUT);
+  pinMode(outp,INPUT);
+  
+  int flag=0;
+  int i,j,k,l;
+  bool v;
+  for (i=0;i<=1;i++)
+  {
+    for (j=0;j<=1;j++)
+    {
+      for(k=0;k<=1;k++)
+      {
+        for(l=0;l<=1;l++)
+        {
+          v=!((bool) i||(bool) j||(bool) k||(bool) l);
+          digitalWrite(inp1,(bool) i);
+          digitalWrite(inp2,(bool) j);
+          digitalWrite(inp3,(bool) k);
+          digitalWrite(inp4,(bool) l);
+          delay(delayms);
+          if (digitalRead(outp)==v)
+          {
+            flag=flag+1;
+          }
+
+        }
+      }
+    }
+  }
+  
+
+  if (flag==16)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 void clock(int n)
 {

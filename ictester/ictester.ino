@@ -22,16 +22,20 @@ void loop()
     IC7430();//eight input nandgate
     IC7432();//quad two input or gate
     IC7436();//quad two input nor gate
-    IC7473();
-    IC7474();
-    IC4072();
-    IC4000();
-    IC4002();
-    IC4001();
-    IC4012();
+    IC7473();//dual J-K flip-flop with clear
+    IC7474();//dual D positive edge triggered flip-flop with preset and clear
+    IC4072();//Dual 4-input OR gate
+    IC4000();//Dual 3-input NOR gate + 1 Inverter
+    IC4002();//Dual 4-input NOR gate
+    IC4001();//Quad 2-input NOR gate
+    IC4012();//Dual 4-input NAND gate
+    IC4013();//Dual D-type flip-flop
+    //IC4069();//Hex inverter
+    show("NOT found");
     while(true){
       ;
     }
+    
     
 }
 //functions----
@@ -47,6 +51,7 @@ void loop()
 //norgate()
 //fourand()
 //fournor()
+//notgate()
 //clock(int n)
 //jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
 //d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
@@ -193,7 +198,7 @@ void IC7404()
   e=notgate(pin(11),pin(10));
   f=notgate(pin(9),pin(8));
   if(a==true && b==true && c==true && d==true && e==true && f==true){
-    show("IC7404 Or 7405");
+    show("IC7404 Or 7405 or 4069");
     while(true){
       ;
     }
@@ -408,7 +413,47 @@ void IC4012()
     }
   }
 }
-
+void IC4013()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b;
+  a=d_pos_trig_ff_with_pre_clr(pin(5),pin(3),pin(4),pin(6),pin(1),pin(2));
+  b=d_pos_trig_ff_with_pre_clr(pin(9),pin(11),pin(10),pin(8),pin(13),pin(12));
+  if (a==true && b==true)
+  {
+    show("IC4013");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+/*void IC4069()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b,c,d,e,f;
+  a=notgate(pin(1),pin(2));
+  b=notgate(pin(3),pin(4));
+  c=notgate(pin(5),pin(6));
+  d=notgate(pin(9),pin(8));
+  e=notgate(pin(11),pin(10));
+  f=notgate(pin(13),pin(12));
+  if (a==true && b==true && c=true && d==true && e==true && f==true)
+  {
+    show("IC4069");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+*/
 int pin(int n)
 {
   n=n+21;
@@ -500,7 +545,7 @@ boolean threeAnd(int inp1,int inp2,int inp3,int otp){
       digitalWrite(inp2,(bool)j);
       for(k=0;k<2;k++){
          digitalWrite(inp3,(bool)k);
-         delayMicroseconds(1);
+         delay(delayms);
          if(digitalRead(otp)==((bool)i && (bool)j && (bool)k)){
             count++;
          }

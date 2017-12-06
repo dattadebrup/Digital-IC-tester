@@ -30,7 +30,8 @@ void loop()
     IC4001();//Quad 2-input NOR gate
     IC4012();//Dual 4-input NAND gate
     IC4013();//Dual D-type flip-flop
-    //IC4069();//Hex inverter
+    IC7486();//quad 2-input XOR gate
+    IC4069();//Hex inverter
     show("NOT found");
     while(true){
       ;
@@ -52,6 +53,7 @@ void loop()
 //fourand()
 //fournor()
 //notgate()
+//xorgate()
 //clock(int n)
 //jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
 //d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
@@ -338,6 +340,26 @@ void IC7474()
     }
   }
 }
+void IC7486()
+{
+   pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b,c,d;
+  a=xorgate(pin(1),pin(2),pin(3));
+  b=xorgate(pin(4),pin(5),pin(6));
+  c=xorgate(pin(9),pin(10),pin(8));
+  d=xorgate(pin(12),pin(13),pin(11));
+  if(a==true && b==true && c==true && d==true)
+  {
+    show("IC7486");
+    while(true)
+    {
+      ;
+    }
+  }
+}
 void IC4000()
 {
   pinMode(pin(7),OUTPUT);
@@ -431,7 +453,7 @@ void IC4013()
     }
   }
 }
-/*void IC4069()
+void IC4069()
 {
   pinMode(pin(7),OUTPUT);
   pinMode(pin(14),OUTPUT);
@@ -444,7 +466,7 @@ void IC4013()
   d=notgate(pin(9),pin(8));
   e=notgate(pin(11),pin(10));
   f=notgate(pin(13),pin(12));
-  if (a==true && b==true && c=true && d==true && e==true && f==true)
+  if (a==true && b==true && c==true && d==true && e==true && f==true)
   {
     show("IC4069");
     while(true)
@@ -453,7 +475,7 @@ void IC4013()
     }
   }
 }
-*/
+
 int pin(int n)
 {
   n=n+21;
@@ -1125,6 +1147,45 @@ boolean d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
     }
   }
   if (flag==8)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+boolean xorgate(int inp1,int inp2,int outp)
+{
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(outp,INPUT);
+  int flag=0;
+  digitalWrite(inp1,LOW);
+  digitalWrite(inp2,LOW);
+  if (digitalRead(outp)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(inp1,LOW);
+  digitalWrite(inp2,HIGH);
+  if (digitalRead(outp)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(inp1,HIGH);
+  digitalWrite(inp2,LOW);
+  if (digitalRead(outp)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(inp1,HIGH);
+  digitalWrite(inp2,HIGH);
+  if (digitalRead(outp)==LOW)
+  {
+    flag=flag+1;
+  }
+  if (flag==4)
   {
     return true;
   }

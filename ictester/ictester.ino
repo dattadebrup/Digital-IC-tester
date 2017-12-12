@@ -22,6 +22,7 @@ void loop()
     IC7430();//eight input nandgate
     IC7432();//quad two input or gate
     IC7436();//quad two input nor gate
+    IC7442();//active low BCD to Decimal decoder
     IC7473();//dual J-K flip-flop with clear
     IC7474();//dual D positive edge triggered flip-flop with preset and clear
     IC4072();//Dual 4-input OR gate
@@ -32,7 +33,7 @@ void loop()
     IC4013();//Dual D-type flip-flop
     IC7486();//quad 2-input XOR gate
     IC4069();//Hex inverter
-    show("NOT found");
+    show("NOT_found");
     while(true){
       ;
     }
@@ -51,6 +52,8 @@ void loop()
 //orgate()
 //norgate()
 //fourand()
+//fourAndWII()
+//fourNandWII()
 //fournor()
 //notgate()
 //xorgate()
@@ -122,8 +125,11 @@ void IC7410(){
   digitalWrite(14,HIGH);
  bool a,b,c;
  a=threeNand(pin(1),pin(2),pin(13),pin(12));
+ Serial.println(a);
  b=threeNand(pin(3),pin(4),pin(5),pin(6));
+ Serial.println(b);
  c=threeNand(pin(9),pin(10),pin(11),pin(8));
+ Serial.println(c);
  if(a==true && b==true && c==true){
   show("IC7410 or IC7412");
   while(true){
@@ -304,6 +310,29 @@ void IC7436(){
     }
   }
 }
+void IC7442(){
+  pinMode(pin(8),OUTPUT);
+  pinMode(pin(16),OUTPUT);
+  digitalWrite(pin(8),0);
+  digitalWrite(pin(16),1);
+  bool y_0,y_1,y_2,y_3,y_4,y_5,y_6,y_7,y_8,y_9;
+  y_0=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(1),0,0,0,0);
+  y_1=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(2),0,0,0,1);
+  y_2=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(3),0,0,1,0);
+  y_3=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(4),0,0,1,1);
+  y_4=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(5),0,1,0,0);
+  y_5=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(6),0,1,0,1);
+  y_6=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(7),0,1,1,0);
+  y_7=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(9),0,1,1,1);
+  y_8=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(10),1,0,0,0);
+  y_9=fourNandWII(pin(15),pin(14),pin(13),pin(12),pin(11),1,0,0,1);
+  if(y_0 == true && y_1 == true && y_2 == true && y_3 == true && y_4 == true && y_5 == true && y_6 == true && y_7 == true && y_8 == true &&y_9 == true){
+    show("IC7442");
+    while(true){
+      ;
+    }
+  }
+}
 void IC7473()
 {
   pinMode(pin(4),OUTPUT);
@@ -392,7 +421,7 @@ void IC4001()
   d=norgate(pin(12),pin(13),pin(11));
   if (a==true && b==true && c==true && d==true)
   {
-    show('IC4001');
+    show("IC4001");
     while(true)
     {
       ;
@@ -953,6 +982,114 @@ boolean fourand(int inp1,int inp2,int inp3,int inp4,int outp)
     return false;
   }
   
+}
+boolean fourAndWII(int inp1,int inp2,int inp3,int inp4,int outp,bool a,bool b,bool c,bool d){
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(inp4,OUTPUT);
+  pinMode(outp,INPUT);
+  int count=0;
+  int i,j,k,l;
+  for (i=0;i<2;i++){
+    if(a==true){
+      digitalWrite(inp1,(bool)i);
+    }
+    else{
+      digitalWrite(inp1,!(bool)i);
+    }
+    for(j=0;j<2;j++){
+      if(b==true){
+        digitalWrite(inp2,(bool)j);
+      }
+      else{
+        digitalWrite(inp2,!(bool)j);
+      }
+      for(k=0;k<2;k++){
+        if(c==true){
+          digitalWrite(inp3,(bool)k);
+        }
+        else{
+          digitalWrite(inp3,!(bool)k);
+        }
+        for(l=0;l<2;l++){
+          if(d==true){
+            digitalWrite(inp4,(bool)l);
+          }
+          else{
+            digitalWrite(inp4,!(bool)l);
+          }
+          delayMicroseconds(1);
+          if(digitalRead(outp)==((bool)i && (bool)j && (bool)k && (bool)l)){
+            count++;
+          }
+          else{
+            return false;
+          }
+        }
+      }
+    }
+  }
+  if(count==16){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+boolean fourNandWII(int inp1,int inp2,int inp3,int inp4,int outp,bool a,bool b,bool c,bool d){
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(inp4,OUTPUT);
+  pinMode(outp,INPUT);
+  int count=0;
+  int i,j,k,l;
+  for (i=0;i<2;i++){
+    if(a==true){
+      digitalWrite(inp1,(bool)i);
+    }
+    else{
+      digitalWrite(inp1,!(bool)i);
+    }
+    for(j=0;j<2;j++){
+      if(b==true){
+        digitalWrite(inp2,(bool)j);
+      }
+      else{
+        digitalWrite(inp2,!(bool)j);
+      }
+      for(k=0;k<2;k++){
+        if(c==true){
+          digitalWrite(inp3,(bool)k);
+        }
+        else{
+          digitalWrite(inp3,!(bool)k);
+        }
+        for(l=0;l<2;l++){
+          if(d==true){
+            digitalWrite(inp4,(bool)l);
+          }
+          else{
+            digitalWrite(inp4,!(bool)l);
+          }
+          delayMicroseconds(1);
+          if(digitalRead(outp)!=((bool)i && (bool)j && (bool)k && (bool)l)){
+            count++;
+          }
+          else{
+            return false;
+          }
+        }
+      }
+    }
+  }
+  if(count==16){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 boolean fournor(int inp1,int inp2,int inp3,int inp4,int outp)
 {

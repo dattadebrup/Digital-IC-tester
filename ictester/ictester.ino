@@ -23,15 +23,19 @@ void loop()
     IC7432();//quad two input or gate
     IC7436();//quad two input nor gate
     IC7442();//active low BCD to Decimal decoder
-    IC7473();//dual J-K flip-flop with clear
+    IC7450();//dual 2-wide 2-input AND-OR-invert gate (one gate expandable)
+    IC7473();//dual positive edge triggered J-K flip-flop with clear
     IC7474();//dual D positive edge triggered flip-flop with preset and clear
+    IC7475();//4 bit bistable latch 16 pin IC
+    IC7476();//dual jk flipflop with preset and clear
+    IC7477();//4 bit bistable Latch 14 pin IC
+    IC7486();//quad 2-input XOR gate
     IC4072();//Dual 4-input OR gate
     IC4000();//Dual 3-input NOR gate + 1 Inverter
     IC4002();//Dual 4-input NOR gate
     IC4001();//Quad 2-input NOR gate
     IC4012();//Dual 4-input NAND gate
     IC4013();//Dual D-type flip-flop
-    IC7486();//quad 2-input XOR gate
     IC4069();//Hex inverter
     show("NOT_found");
     while(true){
@@ -41,6 +45,7 @@ void loop()
     
 }
 //functions----
+//andOrInvert()
 //andgate(i/p,i/p,o/p)
 //threeAnd()
 //nandgate(i/p,i/p,o/p)
@@ -58,7 +63,12 @@ void loop()
 //notgate()
 //xorgate()
 //clock(int n)
-//jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
+//dLatch(d,clock,q,q_)
+//DLatch(d,clock,q)
+//jk_ff_neg_with_invert_clear(int j,int k,int clk,int clr,int q,int q_)
+//jk_ff_pos_with_invert_clear(int j,int k,int clk,int clr,int q,int q_)
+//jk_ff_with_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_)
+//jk_ff_with_inverted_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_)
 //d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
 
 
@@ -333,6 +343,21 @@ void IC7442(){
     }
   }
 }
+void IC7450(){
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),0);
+  digitalWrite(pin(14),1);
+  bool a,b;
+  a=andOrInvert(pin(1),pin(13),pin(10),pin(9),pin(8));
+  b=andOrInvert(pin(2),pin(3),pin(4),pin(5),pin(6));
+  if (a==true && b==true){
+    show("IC7450");
+    while(true){
+      ;
+    }
+  }
+}
 void IC7473()
 {
   pinMode(pin(4),OUTPUT);
@@ -340,8 +365,8 @@ void IC7473()
   digitalWrite(pin(4),HIGH);
   digitalWrite(pin(11),LOW);
   bool a,b;
-  a=jk_ff_with_clear(pin(14),pin(3),pin(1),pin(2),pin(12),pin(13));
-  b=jk_ff_with_clear(pin(7),pin(10),pin(5),pin(6),pin(9),pin(8));
+  a=jk_ff_neg_with_invert_clear(pin(14),pin(3),pin(1),pin(2),pin(12),pin(13));
+  b=jk_ff_neg_with_invert_clear(pin(7),pin(10),pin(5),pin(6),pin(9),pin(8));
   if (a==true && b==true)
   {
     show("IC7473");
@@ -365,6 +390,55 @@ void IC7474()
     show("IC7474");
     while(true)
     {
+      ;
+    }
+  }
+}
+void IC7475(){
+  pinMode(5,OUTPUT);
+  pinMode(12,OUTPUT);
+  digitalWrite(5,HIGH);
+  digitalWrite(12,LOW);
+  bool a,b,c,d;
+  a=dLatch(pin(2),pin(13),pin(16),pin(1));
+  b=dLatch(pin(3),pin(13),pin(15),pin(14));
+  c=dLatch(pin(6),pin(4),pin(10),pin(11));
+  d=dLatch(pin(7),pin(4),pin(9),pin(8));
+  if (a==true && b==true && c==true && d==true){
+    show("IC7475");
+    while(true){
+      ;
+    }
+  }
+}
+void IC7476(){
+  pinMode(pin(5),OUTPUT);
+  pinMode(pin(13),OUTPUT);
+  digitalWrite(pin(5),HIGH);
+  digitalWrite(pin(13),LOW);
+  bool a,b;
+  a=jk_Latch_with_inverted_preset_and_clear(pin(4),pin(16),pin(1),pin(3),pin(2),pin(15),pin(14));
+  b=jk_Latch_with_inverted_preset_and_clear(pin(9),pin(12),pin(6),pin(8),pin(7),pin(11),pin(10));
+  if(a==true && b==true){
+    show("IC7476");
+    while(true){
+      ;
+    }
+  }
+}
+void IC7477(){
+  pinMode(pin(11),OUTPUT);
+  pinMode(pin(4),OUTPUT);
+  digitalWrite(pin(4),HIGH);
+  digitalWrite(pin(11),LOW);
+  bool a,b,c,d;
+  a=DLatch(pin(1),pin(12),pin(14));
+  b=DLatch(pin(2),pin(12),pin(13));
+  c=DLatch(pin(5),pin(3),pin(9));
+  d=DLatch(pin(6),pin(3),pin(8));
+  if(a==true && b==true && c==true && d==true){
+    show("IC7477");
+    while(true){
       ;
     }
   }
@@ -754,6 +828,39 @@ boolean fournand(int inp1,int inp2,int inp3,int inp4,int outp)
   }
   
 }
+boolean andOrInvert(int inp1,int inp2,int inp3,int inp4,int outp){
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(inp4,OUTPUT);
+  pinMode(outp,INPUT);
+  int i,j,k,l,count;
+  for (i=0;i<2;i++){
+    digitalWrite(inp1,(bool)i);
+    for (j=0;j<2;j++){
+      digitalWrite(inp2,(bool)j);
+      for(k=0;k<2;k++){
+        digitalWrite(inp3,(bool)k);
+        for(l=0;l<2;l++){
+          digitalWrite(inp4,(bool)l);
+          delayMicroseconds(1);
+          if(digitalRead(outp)!=(((bool)i && (bool)j) || ((bool)j && (bool)k))){
+            count++;
+          }
+          else{
+            return false;
+          }
+        }
+      }
+    }
+  }
+  if(count==16){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 boolean eightNand(int inp1,int inp2,int inp3,int inp4,int inp5,int inp6,int inp7,int inp8,int otp){
   pinMode(inp1,OUTPUT);
   pinMode(inp2,OUTPUT);
@@ -1140,94 +1247,234 @@ void clock(int n)
 {
   pinMode(n,OUTPUT);
   digitalWrite(n,LOW);
-  delay(1);
+  delayMicroseconds(10);
   digitalWrite(n,HIGH);
-  delay(1);
+  delayMicroseconds(10);
   digitalWrite(n,LOW);
-  delay(1);
+  delayMicroseconds(10);
   return;
 
 }
-boolean jk_ff_with_clear(int j,int k,int clk,int clr,int q,int q_)
-{
+boolean jk_ff_pos_with_invert_clear(int j,int k,int clk,int clr,int q,int q_){
   pinMode(j,OUTPUT);
   pinMode(k,OUTPUT);
   pinMode(clk,OUTPUT);
   pinMode(clr,OUTPUT);
   pinMode(q,INPUT);
-  pinMode(q_,INPUT);
-  int flag=0;
-  int y,u;
+  pinMode(q_,INPUT); 
+  int count = 0,a,b;
   digitalWrite(clr,HIGH);
-  digitalWrite(j,LOW);
-  digitalWrite(k,HIGH);
-  clock(clk);
-  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
-  {
-    flag=flag+1;
-  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
   digitalWrite(j,HIGH);
   digitalWrite(k,LOW);
-  clock(clk);
-  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
-  {
-    flag=flag+1;
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++; 
   }
-  digitalWrite(j,LOW);
-  digitalWrite(k,LOW);
-  clock(clk);
-  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
-  {
-    flag=flag+1;
-  }
-  digitalWrite(j,HIGH);
-  digitalWrite(k,HIGH);
-  clock(clk);
-  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
-  {
-    flag=flag+1;
-  }
-  digitalWrite(clr,LOW);
-  for (y=0;y<=1;y++)
-  {
-    for(u=0;u<=1;u++)
-    {
-      digitalWrite(j,(bool) y);
-      digitalWrite(k,(bool) u);
-      clock(clk);
-      if(digitalRead(q)==LOW && digitalRead(q_)==HIGH)
-      {
-        flag=flag+1;
-      }
-    }
-  }
-  digitalWrite(clr,HIGH);
-  digitalWrite(j,LOW);
-  digitalWrite(k,HIGH);
-  clock(clk);
-  digitalWrite(j,LOW);
-  digitalWrite(k,LOW);
-  clock(clk);
-  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH)
-  {
-    flag=flag+1;
-  }
-  digitalWrite(j,HIGH);
-  digitalWrite(k,HIGH);
-  clock(clk);
-  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
-  {
-    flag=flag+1;
-  }
-  if (flag==10)
-  {
-    return true;
-  }
-  else
-  {
+  else{
     return false;
   }
-
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++; 
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++; 
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,HIGH);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++; 
+  }
+  else{
+    return false;
+  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++; 
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++; 
+  }
+  else{
+    return false;
+  }
+  digitalWrite(clr,LOW);
+  delayMicroseconds(10);
+  for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+       if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+        count++;
+       }
+       else{
+        return false;
+       }
+    }
+  }
+  if(count==10){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+boolean jk_ff_neg_with_invert_clear(int j,int k,int clk,int clr,int q,int q_){
+  pinMode(j,OUTPUT);
+  pinMode(k,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(clr,OUTPUT);
+  pinMode(q,INPUT);
+  pinMode(q_,INPUT); 
+  int count = 0,a,b;
+  digitalWrite(clr,HIGH);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(j,HIGH);
+  digitalWrite(k,LOW);
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++; 
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(j,LOW);
+  digitalWrite(k,HIGH);
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(clr,LOW);
+  delayMicroseconds(10);
+  for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+       if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+        count++;
+       }
+       else{
+        return false;
+       }
+    }
+  }
+  if(count==10){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+boolean dLatch(int d,int clk,int q,int q_){
+  pinMode(d,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(q,INPUT);
+  pinMode(q_,INPUT);
+  int i,count=0;
+  for(i=0;i<2;i++){
+    digitalWrite(d,(bool)i);
+    clock(clk);
+    if(digitalRead(q)==(bool)i && digitalRead(q_)!=(bool)i){
+      count++;
+    }
+    else{
+      return false;
+    }
+  }
+  if(count==2){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+boolean DLatch(int d,int clk,int q){
+  pinMode(d,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(q,INPUT);
+  int i,count=0;
+  for(i=0;i<2;i++){
+    digitalWrite(d,(bool)i);
+    clock(clk);
+    if(digitalRead(q)==(bool)i){
+      count++;
+    }
+    else{
+      return false;
+    }
+  }
+  if(count==2){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 boolean d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
 {
@@ -1242,13 +1489,29 @@ boolean d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
   digitalWrite(pre,HIGH);
   digitalWrite(clr,HIGH);
   digitalWrite(d,HIGH);
-  clock(clk);
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
   if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
   {
     flag=flag+1;
   }
   digitalWrite(d,LOW);
-  clock(clk);
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+ if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
   if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
   {
     flag=flag+1;
@@ -1283,12 +1546,211 @@ boolean d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
       flag=flag+1;
     }
   }
-  if (flag==8)
+  if (flag==10)
   {
     return true;
   }
   else
   {
+    return false;
+  }
+}
+
+boolean jk_Latch_with_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_){
+  pinMode(j,OUTPUT);
+  pinMode(k,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(clr,OUTPUT);
+  pinMode(pre,OUTPUT);
+  pinMode(q,OUTPUT);
+  pinMode(q_,OUTPUT);
+  int a,b,count=0;
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,LOW);
+  for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+      if(digitalRead(q)==HIGH && digitalRead(q_)==HIGH){
+        count++;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,HIGH);
+   for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+      if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+        count++;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,LOW);
+   for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+      if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+        count++;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,HIGH);
+  digitalWrite(j,0);
+  digitalWrite(k,1);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,0);
+  digitalWrite(k,0);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,1);
+  digitalWrite(k,0);
+  clock(clk);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,0);
+  digitalWrite(k,0);
+  clock(clk);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++;
+  }
+  else{
+    return false;
+  }
+  if(count==16){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+boolean jk_Latch_with_inverted_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_){
+  pinMode(j,OUTPUT);
+  pinMode(k,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(clr,OUTPUT);
+  pinMode(pre,OUTPUT);
+  pinMode(q,OUTPUT);
+  pinMode(q_,OUTPUT);
+  int a,b,count=0;
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,HIGH);
+  for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+      if(digitalRead(q)==HIGH && digitalRead(q_)==HIGH){
+        count++;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,LOW);
+   for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+      if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+        count++;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,HIGH);
+   for(a=0;a<2;a++){
+    digitalWrite(j,(bool)a);
+    for(b=0;b<2;b++){
+      digitalWrite(k,(bool)b);
+      clock(clk);
+      if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+        count++;
+      }
+      else{
+        return false;
+      }
+    }
+  }
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,LOW);
+  digitalWrite(j,0);
+  digitalWrite(k,1);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,0);
+  digitalWrite(k,0);
+  clock(clk);
+  if(digitalRead(q)==LOW && digitalRead(q_)==HIGH){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,1);
+  digitalWrite(k,0);
+  clock(clk);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++;
+  }
+  else{
+    return false;
+  }
+  digitalWrite(j,0);
+  digitalWrite(k,0);
+  clock(clk);
+  if(digitalRead(q)==HIGH && digitalRead(q_)==LOW){
+    count++;
+  }
+  else{
+    return false;
+  }
+  if(count==16){
+    return true;
+  }
+  else{
     return false;
   }
 }

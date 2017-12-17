@@ -39,6 +39,7 @@ void loop()
     IC4069();//Hex inverter
     IC4023();//Triple 3-input NAND gate
     IC4025();//Triple 3-input NOR gate
+    IC4027();//Dual JK flip-flop
     show("NOT_found");
     while(true){
       ;
@@ -69,10 +70,10 @@ void loop()
 //DLatch(d,clock,q)
 //jk_ff_neg_with_invert_clear(int j,int k,int clk,int clr,int q,int q_)
 //jk_ff_pos_with_invert_clear(int j,int k,int clk,int clr,int q,int q_)
-//jk_ff_with_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_)
-//jk_ff_with_inverted_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_)
+//jk_Latch_with_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_)
+//jk_Latch_with_inverted_preset_and_clear(int j,int k,int clk,int clr,int pre,int q,int q_)
 //d_pos_trig_ff_with_pre_clr(int d,int clk,int clr,int pre,int q,int q_)
-
+//jk_ff_pos_with_pre_clr(int j,int k,int clk,int pre,int clr,int q,int q_)
 
 void show(char x[ ])
 {
@@ -612,6 +613,24 @@ void IC4025()
   if (a==true && b==true && c==true)
   {
     show("IC4025");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4027()
+{
+  pinMode(pin(8),OUTPUT);
+  pinMode(pin(16),OUTPUT);
+  digitalWrite(pin(8),LOW);
+  digitalWrite(pin(16),HIGH);
+  bool a,b;
+  a=jk_ff_pos_with_pre_clr(pin(10),pin(11),pin(13),pin(9),pin(12),pin(15),pin(14));
+  b=jk_ff_pos_with_pre_clr(pin(6),pin(5),pin(3),pin(7),pin(4),pin(1),pin(2));
+  if (a==true && b==true)
+  {
+    show("IC4027");
     while(true)
     {
       ;
@@ -1791,6 +1810,119 @@ boolean jk_Latch_with_inverted_preset_and_clear(int j,int k,int clk,int clr,int 
     return true;
   }
   else{
+    return false;
+  }
+}
+boolean jk_ff_pos_with_pre_clr(int j,int k,int clk,int pre,int clr,int q,int q_)
+{
+  pinMode(j,OUTPUT);
+  pinMode(k,OUTPUT);
+  pinMode(clk,OUTPUT);
+  pinMode(clr,OUTPUT);
+  pinMode(pre,OUTPUT);
+  pinMode(q,OUTPUT);
+  pinMode(q_,OUTPUT);
+  pinMode(q,OUTPUT);
+  pinMode(q_,OUTPUT);
+  int a,b,flag=0;
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,LOW);
+  digitalWrite(j,HIGH);
+  digitalWrite(k,LOW);
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(j,HIGH);
+  digitalWrite(k,LOW);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+ digitalWrite(j,LOW);
+ digitalWrite(k,HIGH);
+ digitalWrite(clk,HIGH);
+ delayMicroseconds(10);
+ if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+ digitalWrite(clk,LOW);
+ delayMicroseconds(10);
+ if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+ digitalWrite(j,LOW);
+  digitalWrite(k,LOW);
+  digitalWrite(clk,HIGH);
+  delayMicroseconds(10);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(clk,LOW);
+  delayMicroseconds(10);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,LOW);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==LOW)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(pre,LOW);
+  digitalWrite(clr,HIGH);
+  if (digitalRead(q)==LOW && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  digitalWrite(pre,HIGH);
+  digitalWrite(clr,HIGH);
+  if (digitalRead(q)==HIGH && digitalRead(q_)==HIGH)
+  {
+    flag=flag+1;
+  }
+  if (flag==13)
+  {
+    return true;
+  }
+  else
+  {
     return false;
   }
 }

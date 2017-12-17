@@ -1,4 +1,3 @@
-//test branch
 int delayms=0;
 void setup() 
 {
@@ -38,6 +37,7 @@ void loop()
     IC4012();//Dual 4-input NAND gate
     IC4013();//Dual D-type flip-flop
     IC4069();//Hex inverter
+    IC4023();//Triple 3-input NAND gate
     show("NOT_found");
     while(true){
       ;
@@ -573,6 +573,25 @@ void IC4069()
   if (a==true && b==true && c==true && d==true && e==true && f==true)
   {
     show("IC4069");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4023()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b,c;
+  a=threeNand(pin(3),pin(4),pin(5),pin(6));
+  b=threeNand(pin(11),pin(12),pin(13),pin(10));
+  c=threeNand(pin(1),pin(2),pin(8),pin(9));
+  if (a==true && b==true && c==true)
+  {
+    show("IC4023");
     while(true)
     {
       ;

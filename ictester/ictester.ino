@@ -38,6 +38,7 @@ void loop()
     IC4013();//Dual D-type flip-flop
     IC4069();//Hex inverter
     IC4023();//Triple 3-input NAND gate
+    IC4025();//Triple 3-input NOR gate
     show("NOT_found");
     while(true){
       ;
@@ -592,6 +593,25 @@ void IC4023()
   if (a==true && b==true && c==true)
   {
     show("IC4023");
+    while(true)
+    {
+      ;
+    }
+  }
+}
+void IC4025()
+{
+  pinMode(pin(7),OUTPUT);
+  pinMode(pin(14),OUTPUT);
+  digitalWrite(pin(7),LOW);
+  digitalWrite(pin(14),HIGH);
+  bool a,b,c;
+  a=threeNor(pin(3),pin(4),pin(5),pin(6));
+  b=threeNor(pin(11),pin(12),pin(13),pin(10));
+  c=threeNor(pin(1),pin(2),pin(8),pin(9));
+  if (a==true && b==true && c==true)
+  {
+    show("IC4025");
     while(true)
     {
       ;

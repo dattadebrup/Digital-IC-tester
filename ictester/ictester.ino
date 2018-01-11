@@ -1,4 +1,3 @@
-//test
 int delayms=0;
 void setup() 
 {
@@ -24,13 +23,16 @@ void loop()
     IC7432();//quad two input or gate
     IC7436();//quad two input nor gate
     IC7442();//active low BCD to Decimal decoder
+    IC7445();//
     IC7450();//dual 2-wide 2-input AND-OR-invert gate (one gate expandable)
     IC7473();//dual positive edge triggered J-K flip-flop with clear
     IC7474();//dual D positive edge triggered flip-flop with preset and clear
     IC7475();//4 bit bistable latch 16 pin IC
     IC7476();//dual jk flipflop with preset and clear
     IC7477();//4 bit bistable Latch 14 pin IC
+    
     IC7486();//quad 2-input XOR gate
+    IC74133();//13 input nand gate
     IC4072();//Dual 4-input OR gate
     IC4000();//Dual 3-input NOR gate + 1 Inverter
     IC4002();//Dual 4-input NOR gate
@@ -38,7 +40,6 @@ void loop()
     IC4012();//Dual 4-input NAND gate
     IC4013();//Dual D-type flip-flop
     IC4069();//Hex inverter
-    IC4023();//Triple 3-input NAND gate
     show("NOT_found");
     while(true){
       ;
@@ -65,6 +66,7 @@ void loop()
 //notgate()
 //xorgate()
 //clock(int n)
+//thirteen_Nand()
 //dLatch(d,clock,q,q_)
 //DLatch(d,clock,q)
 //jk_ff_neg_with_invert_clear(int j,int k,int clk,int clr,int q,int q_)
@@ -465,6 +467,20 @@ void IC7486()
     }
   }
 }
+void IC74133(){
+  pinMode(pin(8),OUTPUT);
+  pinMode(pin(16),OUTPUT);
+  digitalWrite(pin(8),LOW);
+  digitalWrite(pin(16),HIGH);
+  bool a;
+  a=thirteen_Nand(pin(1),pin(2),pin(3),pin(4),pin(5),pin(6),pin(7),pin(10),pin(11),pin(12),pin(13),pin(14),pin(15),pin(9));
+  if (a==true){
+    show("IC74133");
+    while(true){
+      ;
+    }
+  }
+}
 void IC4000()
 {
   pinMode(pin(7),OUTPUT);
@@ -574,25 +590,6 @@ void IC4069()
   if (a==true && b==true && c==true && d==true && e==true && f==true)
   {
     show("IC4069");
-    while(true)
-    {
-      ;
-    }
-  }
-}
-void IC4023()
-{
-  pinMode(pin(7),OUTPUT);
-  pinMode(pin(14),OUTPUT);
-  digitalWrite(pin(7),LOW);
-  digitalWrite(pin(14),HIGH);
-  bool a,b,c;
-  a=threeNand(pin(3),pin(4),pin(5),pin(6));
-  b=threeNand(pin(11),pin(12),pin(13),pin(10));
-  c=threeNand(pin(1),pin(2),pin(8),pin(9));
-  if (a==true && b==true && c==true)
-  {
-    show("IC4023");
     while(true)
     {
       ;
@@ -931,6 +928,76 @@ boolean eightNand(int inp1,int inp2,int inp3,int inp4,int inp5,int inp6,int inp7
     return false;
   }
 }
+boolean thirteen_Nand(int inp1,int inp2,int inp3,int inp4,int inp5,int inp6,int inp7,int inp8,int inp9,int inp10,int inp11,int inp12,int inp13,int otp){
+  pinMode(inp1,OUTPUT);
+  pinMode(inp2,OUTPUT);
+  pinMode(inp3,OUTPUT);
+  pinMode(inp4,OUTPUT);
+  pinMode(inp5,OUTPUT);
+  pinMode(inp6,OUTPUT);
+  pinMode(inp7,OUTPUT);
+  pinMode(inp8,OUTPUT);
+  pinMode(inp9,OUTPUT);
+  pinMode(inp10,OUTPUT);
+  pinMode(inp11,OUTPUT);
+  pinMode(inp12,OUTPUT);
+  pinMode(inp13,OUTPUT);
+  pinMode(otp,INPUT);
+  int a,b,c,d,e,f,g,h,i,j,k,l,m,count=0;
+  for(a=0;a<2;a++){
+    digitalWrite(inp1,(bool)a);
+    for (b=0;b<2;b++){
+      digitalWrite(inp2,(bool)b);
+      for (c=0;c<2;c++){
+        digitalWrite(inp3,(bool)c);
+        for(d=0;d<2;d++){
+          digitalWrite(inp4,(bool)d);
+          for(e=0;e<2;e++){
+            digitalWrite(inp5,(bool)e);
+            for(f=0;f<2;f++){
+              digitalWrite(inp6,(bool)f);
+              for(g=0;g<2;g++){
+                digitalWrite(inp7,(bool)g);
+                for(h=0;h<2;h++){
+                  digitalWrite(inp8,(bool)h);
+                  for(a=0;a<2;a++){
+                    digitalWrite(inp9,(bool)i);
+                    for (b=0;b<2;b++){
+                      digitalWrite(inp10,(bool)j);
+                      for (c=0;c<2;c++){
+                        digitalWrite(inp11,(bool)k);
+                        for(d=0;d<2;d++){
+                          digitalWrite(inp12,(bool)l);
+                            for(e=0;e<2;e++){
+                              digitalWrite(inp13,(bool)m);
+                              delayMicroseconds(1);
+                              if(digitalRead(otp)!=((bool)a && (bool)b && (bool)c && (bool)d && (bool)e && (bool)f && (bool)g && (bool)h && (bool)i && (bool)j && (bool)k && (bool)l && (bool)m)){
+                                count++;
+                              }
+                              else {
+                                return false;  
+                              }
+                            }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if(count==8192){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
 boolean fouror(int inp1,int inp2,int inp3,int inp4,int outp)
 {
   pinMode(inp1,OUTPUT);
@@ -1274,7 +1341,6 @@ void clock(int n)
   digitalWrite(n,LOW);
   delayMicroseconds(10);
   return;
-
 }
 boolean jk_ff_pos_with_invert_clear(int j,int k,int clk,int clr,int q,int q_){
   pinMode(j,OUTPUT);

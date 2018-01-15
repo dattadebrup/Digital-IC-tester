@@ -1,14 +1,19 @@
-int delayms=0;
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(0,1,8,9,10,11);
+int delayms=1;
 void setup() 
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  
+  lcd.begin(16,2);
 }
 
 void loop() 
 {
   // put your main code here, to run repeatedly:
+  //14 pin ICs
+  if (digitalRead(48)==LOW)
+  {
     IC7400();//**7403**quad two input nand gate
     IC7401();//quad two input nand gate but different pins
     IC7402();//quad two input nor gate
@@ -22,17 +27,16 @@ void loop()
     IC7430();//eight input nandgate
     IC7432();//quad two input or gate
     IC7436();//quad two input nor gate
-    IC7442();//active low BCD to Decimal decoder
-    IC7445();//
+    
+    
     IC7450();//dual 2-wide 2-input AND-OR-invert gate (one gate expandable)
     IC7473();//dual positive edge triggered J-K flip-flop with clear
     IC7474();//dual D positive edge triggered flip-flop with preset and clear
-    IC7475();//4 bit bistable latch 16 pin IC
-    IC7476();//dual jk flipflop with preset and clear
+    
     IC7477();//4 bit bistable Latch 14 pin IC
     
     IC7486();//quad 2-input XOR gate
-    IC74133();//13 input nand gate
+    
     IC4072();//Dual 4-input OR gate
     IC4000();//Dual 3-input NOR gate + 1 Inverter
     IC4002();//Dual 4-input NOR gate
@@ -45,7 +49,16 @@ void loop()
     IC4023();//Triple 3-input NAND gate
     IC4025();//Triple 3-input NOR gate
     IC4027();//Dual JK flip-flop
-
+  }
+  else
+  {
+    //16 pin ICs
+    IC7442();//active low BCD to Decimal decoder
+     
+    IC7475();//4 bit bistable latch 16 pin IC
+    IC7476();//dual jk flipflop with preset and clear
+    IC74133();//13 input nand gate
+  }
     show("NOT_found");
     while(true){
       ;
@@ -85,6 +98,9 @@ void loop()
 void show(char x[ ])
 {
   Serial.println(x);
+  /*lcd.setCursor(3,0);
+  lcd.print(x);
+  */
 }
 void IC7401()
 { 
@@ -145,11 +161,8 @@ void IC7410(){
   digitalWrite(14,HIGH);
  bool a,b,c;
  a=threeNand(pin(1),pin(2),pin(13),pin(12));
- Serial.println(a);
  b=threeNand(pin(3),pin(4),pin(5),pin(6));
- Serial.println(b);
  c=threeNand(pin(9),pin(10),pin(11),pin(8));
- Serial.println(c);
  if(a==true && b==true && c==true){
   show("IC7410 or IC7412");
   while(true){
@@ -664,8 +677,24 @@ void IC4027()
 
 int pin(int n)
 {
-  n=n+21;
+  if(digitalRead(48)==HIGH)
+  {
+    //16 pins
+    n=n+21;
   return n;
+  }
+  else
+  {
+    //14 pins
+    if (n>7)
+    {
+      return n+23;
+    }
+    else
+    {
+      return n+21;
+    }
+  }
 }
 boolean notgate(int inp,int outp)
 {

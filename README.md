@@ -1,5 +1,5 @@
 # Digital-IC-tester
-This project is a part of my 2nd Year semester project.In this project we implemented the functionalities of a traditional IC tester present in Electronics laboratory digitally into an Arduino Mega board for digital ICs.
+This project is a part of my 2nd Year semester project.In this project we implemented the functionalities of a traditional IC tester present in Electronics laboratory digitally into an Arduino Mega board for digital ICs.The Arduino tests whether the IC is in working condition or not.
 We are successfully able to test and implement the functionalities of the following ICs:
     
     -IC7400();//**7403**quad two input nand gate

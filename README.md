@@ -7,7 +7,7 @@ We are successfully able to test and implement the functionalities of the follow
     -IC7402();//quad two input nor gate
     -IC7404();//**7405**hex inverter
     -IC7408();//**7409**quad two input and gate
-    - IC7410();//**7412**tri three input nand gate
+    -IC7410();//**7412**tri three input nand gate
     -IC7411();//**7415**tri three input and gate
     -IC7420();//**7422**twice four input nand gate
     -IC7421();//twice four input and gate

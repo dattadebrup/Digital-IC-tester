@@ -1,15 +1,22 @@
 #include<LiquidCrystal.h>
-LiquidCrystal lcd(0,1,8,9,10,11);
+LiquidCrystal lcd(2,3,8,9,10,11);
+
 int delayms=1;
 void setup() 
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  pinMode(6,OUTPUT);
+  analogWrite(6, 100); 
   lcd.begin(16,2);
+  pinMode(4,OUTPUT);
+  pinMode(5,INPUT);
 }
 
 void loop() 
 {
+  while(digitalRead(5)==HIGH)
+  {
   // put your main code here, to run repeatedly:
   //14 pin ICs
   if (digitalRead(48)==LOW)
@@ -60,11 +67,14 @@ void loop()
     IC74133();//13 input nand gate
   }
     show("NOT_found");
-    while(true){
-      ;
+    bool a=true;
+    while(a==true)
+    {
+      a=false;
     }
     
     
+}
 }
 //functions----
 //andOrInvert()
@@ -98,9 +108,9 @@ void loop()
 void show(char x[ ])
 {
   Serial.println(x);
-  /*lcd.setCursor(3,0);
+  lcd.setCursor(0,0);
   lcd.print(x);
-  */
+  
 }
 void IC7401()
 { 
